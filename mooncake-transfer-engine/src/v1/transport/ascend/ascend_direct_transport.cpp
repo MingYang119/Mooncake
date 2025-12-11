@@ -23,7 +23,7 @@
 
 #include <bits/stdint-uintn.h>
 #include <glog/logging.h>
-
+#include "config.h"
 #include "v1/common/status.h"
 #include "v1/runtime/slab.h"
 #include "v1/runtime/control_plane.h"
@@ -178,6 +178,9 @@ Status AscendDirectTransport::initHixl(
     }
     auto port = findListenPort(device_logic_id_);
     auto hixl_name = host_ip + ":" + std::to_string(port);
+    if (globalConfig().use_ipv6) {
+        hixl_name = ("[" + host_ip + "]" + ":" + std::to_string(port));
+    }
     local_hixl_name_ = hixl_name;
 
     auto segment = metadata_->segmentManager().getLocal();
